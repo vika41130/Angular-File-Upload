@@ -12,8 +12,8 @@ export class AppComponent {
   images: any[] = []
   // images: Observable<{}[]>;
 
-  constructor(fb: AngularFireDatabase) {
-    fb.list('/images').valueChanges()
+  constructor(firebase: AngularFireDatabase) {
+    firebase.list('/images').valueChanges()
     .subscribe(img => {
       this.images.push(img)
       console.log(img)

@@ -1,7 +1,15 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AngularFireObject } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { Observable } from 'rxjs/Observable';
 
 import * as firebase from 'firebase'
+
+interface ImageUrls {
+  url1?: string;
+  url2?: string;
+}
 
 @Component({
   selector: 'app-form-data-uploader',
@@ -13,7 +21,14 @@ export class FormDataUploaderComponent implements OnInit {
   loading: boolean = false;
   files = null;
 
-  constructor(private fb: FormBuilder) {
+  // imagesStream: AngularFireObject<ImageUrls>
+  // images: Observable<{}[]>;
+
+  constructor(private fb: FormBuilder, private firebase: AngularFireDatabase) {
+    // this.imagesStream = this.firebase.object('/images')
+    // this.images = firebase.list('/images').valueChanges()
+    // console.log("123", this.imagesStream)
+    
     this.createForm();
   }
 
