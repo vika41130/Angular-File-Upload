@@ -30,4 +30,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 + https://github.com/angular/angularfire2/blob/master/docs/install-and-setup.md
 + https://medium.com/codingthesmartway-com-blog/building-an-angular-5-project-with-bootstrap-4-and-firebase-4504ff7717c1
 + valueChanges(): https://stackoverflow.com/questions/46734663/angularfire-property-subscribe-does-not-exist-on-type-angularfirelist
++ https://nehalist.io/uploading-files-in-angular2/
 + 
