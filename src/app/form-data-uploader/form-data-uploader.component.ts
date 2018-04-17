@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import * as firebase from 'firebase/app'
+import * as firebase from 'firebase'
 
 @Component({
   selector: 'app-form-data-uploader',
@@ -11,9 +11,8 @@ import * as firebase from 'firebase/app'
 export class FormDataUploaderComponent implements OnInit {
   form: FormGroup;
   loading: boolean = false;
-  file = null;
+  files = null;
 
-  @ViewChild('fileInput') fileInput: ElementRef;
   constructor(private fb: FormBuilder) {
     this.createForm();
   }
@@ -27,18 +26,13 @@ export class FormDataUploaderComponent implements OnInit {
 
   onFileChange(event) {
     if (event.target.files.length > 0) {
-      this.file = event.target.files[0];
-      console.log(event.target.files)
-      this.form.get('avatar').setValue(this.file);
-      // console.log(file.name)
-      // console.log(file)
-      // console.log(file.valueOf)
+      this.files = event.target.files;
+      console.log(this.files)
     }
   }
 
   private prepareSave(): any {
     let input = new FormData();
-    input.append('name', this.form.get('name').value);
     input.append('avatar', this.form.get('avatar').value);
     return input;
   }
@@ -53,27 +47,31 @@ export class FormDataUploaderComponent implements OnInit {
 
     setTimeout(() => {
       // FormData cannot be inspected (see "Key difference"), hence no need to log it here
-      alert('done!');
       this.loading = false;
     }, 1000);
   }
 
   upload() {
-    var storageRef = firebase.storage().ref('/images/' + this.file.name);
-    var uploadTask = storageRef.put(this.file)
+    Object.entries(this.files).forEach(
+      ([key, value]) => {
+        let file = this.files[key]
+        let metaData = { 'contentType': file.type }
+        let storageRef: firebase.storage.Reference = firebase.storage().ref('/images/' + file.name)
+        let uploadTask = storageRef.put(file, metaData)
+        uploadTask.on('state_changed', function (snapshot) {
 
-    uploadTask.on('state_changed', function (snapshot) {
-
-    }, function (error) {
-    }, function () {
-      var downloadURL = uploadTask.snapshot.downloadURL;
-      console.log(downloadURL)
-    });
+        }, function (error) {
+          console.log("error")
+        }, function () {
+          let downloadURL = uploadTask.snapshot.downloadURL;
+          console.log(downloadURL)
+        });
+      }
+    );
   }
 
   clearFile() {
     this.form.get('avatar').setValue(null);
-    this.fileInput.nativeElement.value = '';
   }
 
   ngOnInit() {
